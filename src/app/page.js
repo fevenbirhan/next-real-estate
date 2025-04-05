@@ -1,7 +1,9 @@
 import ListingItem from '@/components/ListingItem';
 import Link from 'next/link';
+import { currentUser } from '@clerk/nextjs/server';
 
 export default async function Home() {
+   const user = await currentUser();
    let rentListings = null;
    try {
      const result = await fetch(process.env.URL + '/api/listing/get', {
@@ -56,17 +58,30 @@ export default async function Home() {
    return (
      <div>
        <div className='flex flex-col gap-6 p-28 px-3 max-w-6xl mx-auto'>
-         <h1 className='text-slate-700 font-bold text-3xl lg:text-6xl'>
-           Find your next <span className='text-slate-500'>perfect</span>
-           <br />
-           place with ease
-         </h1>
-         <div className='text-gray-400 text-xs sm:text-sm'>
-           Feven Real-Estate is the best place to find your next perfect place to
-           live.
-           <br />
-           We have a wide range of properties for you to choose from.
+        <div className='flex justify-between items-start'>
+         <div>
+          <h1 className='text-slate-700 font-bold text-3xl lg:text-6xl'>
+            Find your next <span className='text-slate-500'>perfect</span>
+            <br />
+            place with ease
+          </h1>
+          <div className='text-gray-400 text-xs sm:text-sm'>
+            Feven Real-Estate is the best place to find your next perfect place to
+            live.
+            <br />
+            We have a wide range of properties for you to choose from.
+          </div>
          </div>
+         {user && (
+            <Link
+              href="/create-listing"
+              className="bg-slate-700 text-white px-4 py-2 rounded-lg hover:bg-slate-600 transition-color text-sm sm:text-base"
+            >
+              + Create Listing
+            </Link>
+          )}
+        </div>
+
          <Link
            href={'/search'}
            className='text-xs sm:text-sm text-blue-800 font-bold hover:underline'
