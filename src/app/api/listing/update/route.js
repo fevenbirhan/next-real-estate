@@ -1,20 +1,18 @@
 import Listing from '../../../../lib/models/listing.model.js';
 import { connect } from '../../../../lib/mongodb/mongoose.js';
-import { currentUser } from '@clerk/nextjs/server';
+import { currentUser  } from '@clerk/nextjs/server';
 
 export const POST = async (req) => {  
+    const user = await currentUser();
    try {
-     const user = await currentUser(); 
+     await connect();
      const data = await req.json();
-
      if (!user || user.publicMetadata.userMongoId !== data.userMongoId) {
-       return new Response('Unauthorized', {
-         status: 401,
-       });
+     return new Response('Unauthorized', {
+        status: 401,
+     });
      }
 
-     await connect();
-     
      const newListing = await Listing.findByIdAndUpdate(
        data.listingId,
        {

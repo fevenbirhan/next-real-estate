@@ -173,7 +173,7 @@ import { useRouter, usePathname } from 'next/navigation';
          },
          body: JSON.stringify({
            ...formData,
-           userMongoId: user.publicMetadata.userId,
+           userMongoId: user.publicMetadata.userMongoId,
            listingId,
          }),
        });
