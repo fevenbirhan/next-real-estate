@@ -1,24 +1,22 @@
 import mongoose from 'mongoose';
 
-const options = {
-  dbName: 'next-real-estate',
-  connectTimeoutMS: 30000,
-  socketTimeoutMS: 45000,
-  // Remove TLS/directConnection - Railway's proxy handles this
-};
+let initialized = false;
 
-let cached = global.mongoose || { conn: null, promise: null };
+export const connect = async () => {
+  mongoose.set('strictQuery', true);
 
-export async function connect() {
-  if (cached.conn) return cached.conn;
-
-  if (!cached.promise) {
-    mongoose.set('strictQuery', true);
-    cached.promise = mongoose.connect(process.env.MONGODB_URI, options)
-      .then(mongoose => mongoose);
+  if (initialized) {
+    console.log('MongoDB already connected');
+    return;
   }
 
-  cached.conn = await cached.promise;
-  console.log('✅ MongoDB Connected via Railway');
-  return cached.conn;
-}
+  try {
+    await mongoose.connect(process.env.MONGODB_URI, {
+      dbName: 'next-real-estate',
+    });
+    initialized = true;
+    console.log('MongoDB connected');
+  } catch (error) {
+    console.log('MongoDB connection error:', error);
+  }
+};
