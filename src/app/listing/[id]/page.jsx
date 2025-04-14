@@ -33,11 +33,34 @@ export default async function Listing({ params }) {
       return (
         <main>
           <div>
-            <img
-              src={listing.imageUrls[0]}
-              alt={listing.name}
-              className='w-full h-[400px] object-cover'
-            />
+            <div className='max-w-6xl mx-auto px-4 py-6'>
+              {/* Main image (cover) */}
+              <div className='w-full h-[400px] overflow-hidden rounded-lg mb-6'>
+                <img
+                  src={listing.imageUrls[0]}
+                  alt={listing.name}
+                  className='w-full h-full object-cover'
+                />
+              </div>
+
+              {/* All images grid */}
+              {listing.imageUrls.length > 1 && (
+                <div>
+                  <h2 className='text-xl font-semibold mb-4'>Images</h2>
+                  <div className='grid grid-cols-2 sm:grid-cols-3 gap-4'>
+                    {listing.imageUrls.map((url, index) => (
+                      <img
+                        key={index}
+                        src={url}
+                        alt={`listing image ${index + 1}`}
+                        className='w-full h-48 object-cover rounded-md'
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
             <div className='flex flex-col max-w-4xl mx-auto p-3 my-7 gap-4'>
               <p className='text-2xl font-semibold'>
                 {listing.name} - ${' '}
